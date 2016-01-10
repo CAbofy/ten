@@ -15,5 +15,5 @@ var userSchema = mongoose.Schema({
     temp_str:String
 });
 
-mongoose.connect('mongodb://localhost:27017/test');
+mongoose.connect('mongodb://cabofy:cabofy@123@ec2-52-90-43-158.compute-1.amazonaws.com:27017/dummy');
 module.exports = mongoose.model('User', userSchema);
