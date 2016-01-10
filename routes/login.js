@@ -1,0 +1,37 @@
+/**
+ * Created by KESHU on 10-Dec-15.
+ */
+var crypto = require('crypto');
+var rand = require('csprng');
+var mongoose = require('mongoose');
+var gravatar = require('gravatar');
+var user = require('../routes/models');
+
+
+exports.login = function(email,password,callback) {
+
+    user.find({email: email},function(err,User){
+
+        if(User.length != 0){
+
+            var temp = User[0].salt;
+            var hash_db = User[0].hashed_password;
+            var id = User[0].token;
+            var newpass = temp + password;
+            var hashed_password = crypto.createHash('sha512').update(newpass).digest("hex");
+            var grav_url = gravatar.url(email, {s: '200', r: 'pg', d: '404'});
+            if(hash_db == hashed_password){
+
+                callback({'response':"Login Sucess",'res':true,'token':id,'grav':grav_url});
+
+            }else{
+
+                callback({'response':"Invalid Password",'res':false});
+
+            }
+        }else {
+
+            callback({'response':"User not exist",'res':false});
+        }
+    });
+}
